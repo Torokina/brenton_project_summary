@@ -84,7 +84,7 @@ beauties_raw <- beauties_raw %>%
   summarise_all(mean)
 
 beauties_raw <- beauties_raw %>% 
-  mutate(group = paste(genotype, rhtmajor, rhtminor, sep = "_"))
+  mutate(group = paste(genotype, rhtmajor, rhtminor, sep = "_")) #groups gene combo label
 
 flowerplot <- beauties_raw %>% 
   filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% 
