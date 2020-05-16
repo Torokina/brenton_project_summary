@@ -79,26 +79,134 @@ beauties_raw <- beauties2017 %>%
 #functions - anything that follows () is a function ##generalisation - CAREFUL
 
 beauties_raw <- beauties_raw %>% 
-  select(genotype, rhtmajor, rhtminor, 9:17) %>% 
-  group_by(genotype, rhtmajor, rhtminor) %>% 
-  summarise_all(mean)
+  select(genotype, rhtmajor, rhtminor, 9:17) %>% #select variable columns with data
+  group_by(genotype, rhtmajor, rhtminor) %>% # group rht gene combo
+  summarise_all(mean) # calculate mean for each variety's gene combo
 
 beauties_raw <- beauties_raw %>% 
   mutate(group = paste(genotype, rhtmajor, rhtminor, sep = "_")) #groups gene combo label
 
 flowerplot <- beauties_raw %>% 
-  filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% 
+  filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
   ggplot(aes(x = reorder(group, Z20170926), y = Z20170926)) +
   geom_point()+
   facet_wrap(~genotype, scales = "free_x", nrow = 1)+
    theme_classic() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
-   labs(title="Flowering time", x = "QTL combination", y = "Zadoks Score")
+   labs(title="Flowering time 2nd", x = "QTL combination", y = "Zadoks Score")
   
 
 flowerplot
 
 ```
+
+```{r}
+
+flowerplot2 <- beauties_raw %>% 
+  filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
+  ggplot(aes(x = reorder(group, Z20170920), y = Z20170920)) +
+  geom_point()+
+  facet_wrap(~genotype, scales = "free_x", nrow = 1)+
+   theme_classic() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
+   labs(title="Flowering time 1st", x = "QTL combination", y = "Zadoks Score")
+
+flowerplot2
+
+
+```
+
+```{r}
+
+yield <- beauties_raw %>% 
+  filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
+  ggplot(aes(x = reorder(group, yieldkgm2), y = yieldkgm2)) +
+  geom_point()+
+  facet_wrap(~genotype, scales = "free_x", nrow = 1)+
+   theme_classic() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
+   labs(title="Plot yield", x = "QTL combination", y = "Grain Yield")
+
+yield
+
+```
+
+```{r}
+
+hi <- beauties_raw %>% 
+  filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
+  ggplot(aes(x = reorder(group, HI), y = HI)) +
+  geom_point()+
+  facet_wrap(~genotype, scales = "free_x", nrow = 1)+
+   theme_classic() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
+   labs(title="Harvest Index", x = "QTL combination", y = "HI")
+
+hi
+
+
+```
+
+
+```{r}
+tiller <- beauties_raw %>% 
+  filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
+  ggplot(aes(x = reorder(group, tillerperm2), y = tillerperm2)) +
+  geom_point()+
+  facet_wrap(~genotype, scales = "free_x", nrow = 1)+
+   theme_classic() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
+   labs(title="Tillering", x = "QTL combination", y = "Tillers m2")
+
+tiller
+```
+
+```{r}
+
+earl <- beauties_raw %>% 
+  filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
+  ggplot(aes(x = reorder(group, earlgthcm), y = earlgthcm)) +
+  geom_point()+
+  facet_wrap(~genotype, scales = "free_x", nrow = 1)+
+   theme_classic() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
+   labs(title="Ear size", x = "QTL combination", y = "Ear length cm")
+
+earl
+```
+
+```{r}
+
+rnn <- beauties_raw %>% 
+  filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
+  ggplot(aes(x = reorder(group, RNN), y = RNN)) +
+  geom_point()+
+  facet_wrap(~genotype, scales = "free_x", nrow = 1)+
+   theme_classic() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
+   labs(title="Rachis number", x = "QTL combination", y = "RNN")
+
+rnn
+
+
+```
+
+```{r}
+
+kwt <- beauties_raw %>% 
+  filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
+  ggplot(aes(x = reorder(group, '200kwt'), y = '200kwt')) +
+  geom_point()+
+  facet_wrap(~genotype, scales = "free_x", nrow = 1)+
+   theme_classic() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
+   labs(title="Grain Size", x = "QTL combination", y = "200 kwt")
+
+kwt
+
+
+```
+
 
 
 **Tables**
