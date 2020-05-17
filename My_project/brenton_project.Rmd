@@ -59,7 +59,7 @@ head(beauties2017)
 beauties_summary <- beauties2017 %>% 
   select(entry, 10:18) %>% 
   group_by(entry) %>% 
-  summarise_all(mean, na.rm = TRUE)
+  summarise_all(mean, na.rm = TRUE) # remove NA to estimate mean of reps 
 
 beauties_raw <- beauties2017 %>% 
   select(-c(10:18), -REP, -row, -range) %>% 
