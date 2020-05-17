@@ -1,11 +1,11 @@
 ---
-title: A short title that describes your work
+title: Effect of different height genes on wheat yield traits
 subtitle: 
-short_title: Optional short title # Delete if not required
+short_title:  # Delete if not required
 
 author:  Brenton Brooks
 affiliation: Ag and Food # Or group/team
-photo: resources/img/photo.jpeg
+photo: resources/img/Sheaf.jpg
 
 output: DSreport::project_summary
 ---
@@ -66,6 +66,17 @@ beauties_raw <- beauties2017 %>%
   left_join(beauties_summary, by="entry") %>% 
   distinct()
 
+```
+
+**Tables**
+
+```{r mytable, out.width='100%', echo = T}
+knitr::kable(head(beauties_summary, n = 5), format = "html", caption = "Example of data measured for each trait") %>% 
+  kable_styling("striped")
+
+```
+
+```{r}
 
 #gather and spread
 #tidy is a rectangular data - 2 dimensions i.e. rows and columns
@@ -82,7 +93,7 @@ beauties_raw <- beauties_raw %>%
   select(genotype, rhtmajor, rhtminor, 9:17) %>% #select variable columns with data
   group_by(genotype, rhtmajor, rhtminor) %>% # group rht gene combo
   summarise_all(mean) # calculate mean for each variety's gene combo
-
+  
 beauties_raw <- beauties_raw %>% 
   mutate(group = paste(genotype, rhtmajor, rhtminor, sep = "_")) #groups gene combo label
 
@@ -99,6 +110,7 @@ flowerplot <- beauties_raw %>%
 flowerplot
 
 ```
+
 
 ```{r}
 
@@ -193,27 +205,21 @@ rnn
 
 ```{r}
 
-kwt <- beauties_raw %>% 
+klwt <- beauties_raw %>% 
   filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
-  ggplot(aes(x = reorder(group, '200kwt'), y = '200kwt')) +
+  ggplot(aes(x = reorder(group, kwt), y = kwt)) +
   geom_point()+
   facet_wrap(~genotype, scales = "free_x", nrow = 1)+
    theme_classic() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
    labs(title="Grain Size", x = "QTL combination", y = "200 kwt")
 
-kwt
+klwt
 
 
 ```
 
 
-
-**Tables**
-```{r mytable, out.width='100%', echo = T}
-knitr::kable(head(gapminder, n = 5), format = "html", caption = "A table of data") %>% 
-  kable_styling("striped")
-```
 
 **Images from a file**
 
