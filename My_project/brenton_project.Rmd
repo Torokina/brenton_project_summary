@@ -22,6 +22,7 @@ knitr::opts_chunk$set(
 library(tidyverse)
 library(gapminder)
 library(kableExtra)
+library(lubridate)
 ```
 
 
@@ -76,7 +77,7 @@ knitr::kable(head(beauties_summary, n = 5), format = "html", caption = "Example 
 
 ```
 
-```{r}
+```{r plot1, fig.cap="First"}
 
 #gather and spread
 #tidy is a rectangular data - 2 dimensions i.e. rows and columns
@@ -99,10 +100,13 @@ beauties_raw <- beauties_raw %>%
 
 flowerplot <- beauties_raw %>% 
   filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
-  ggplot(aes(x = reorder(group, Z20170926), y = Z20170926)) +
-  geom_point()+
+  pivot_longer(cols = c(Z20170920, Z20170926), names_to = "Z_date", values_to = "Z_score") %>% # make long 
+  mutate(Z_date=str_sub(string = Z_date, 2, -1)) %>% # -1 is last character
+  mutate(Z_date=ymd(Z_date)) %>% # make it a real date
+  ggplot(aes(x = group, y = Z_score)) +
+  geom_point(aes(colour= as.factor(Z_date)))+
   facet_wrap(~genotype, scales = "free_x", nrow = 1)+
-   theme_classic() +
+   theme_bw() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
    labs(title="Flowering time 2nd", x = "QTL combination", y = "Zadoks Score")
   
@@ -116,7 +120,7 @@ flowerplot
 
 flowerplot2 <- beauties_raw %>% 
   filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
-  ggplot(aes(x = reorder(group, Z20170920), y = Z20170920)) +
+  ggplot(aes(x = group, Z20170920, y = Z20170920)) +
   geom_point()+
   facet_wrap(~genotype, scales = "free_x", nrow = 1)+
    theme_classic() +
@@ -203,7 +207,7 @@ rnn
 
 ```
 
-```{r}
+```{r plot8, fig.cap="Last"}
 
 klwt <- beauties_raw %>% 
   filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
@@ -219,6 +223,18 @@ klwt
 
 ```
 
+```{r regression yld and HI}
+
+corr_HI_yld <- ggplot(beauties2017, aes(x= tillerperm2, y = earlgthcm)) +
+  geom_point(aes(colour = as.factor(genotype))) +
+  geom_smooth(method = "lm")+
+  theme_classic() +
+  labs()
+
+
+corr_HI_yld
+
+```
 
 
 **Images from a file**
