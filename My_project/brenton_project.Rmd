@@ -227,9 +227,9 @@ klwt
 
 corr_HI_yld <- ggplot(beauties2017, aes(x= tillerperm2, y = earlgthcm)) +
   geom_point(aes(colour = as.factor(genotype))) +
-  geom_smooth(method = "lm")+
+  geom_smooth(method = "lm")+ # linear model, grey line is sd
   theme_classic() +
-  labs()
+  labs() # add these in
 
 
 corr_HI_yld
