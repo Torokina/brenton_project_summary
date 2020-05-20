@@ -116,30 +116,16 @@ flowerplot
 ```
 
 
-```{r}
 
-flowerplot2 <- beauties_raw %>% 
-  filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
-  ggplot(aes(x = group, Z20170920, y = Z20170920)) +
-  geom_point()+
-  facet_wrap(~genotype, scales = "free_x", nrow = 1)+
-   theme_classic() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
-   labs(title="Flowering time 1st", x = "QTL combination", y = "Zadoks Score")
-
-flowerplot2
-
-
-```
 
 ```{r}
 
 yield <- beauties_raw %>% 
   filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
-  ggplot(aes(x = reorder(group, yieldkgm2), y = yieldkgm2)) +
+  ggplot(aes(x = group, y = yieldkgm2)) +
   geom_point()+
   facet_wrap(~genotype, scales = "free_x", nrow = 1)+
-   theme_classic() +
+   theme_bw() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
    labs(title="Plot yield", x = "QTL combination", y = "Grain Yield")
 
@@ -151,10 +137,10 @@ yield
 
 hi <- beauties_raw %>% 
   filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
-  ggplot(aes(x = reorder(group, HI), y = HI)) +
+  ggplot(aes(x = group, y = HI)) +
   geom_point()+
   facet_wrap(~genotype, scales = "free_x", nrow = 1)+
-   theme_classic() +
+   theme_bw() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
    labs(title="Harvest Index", x = "QTL combination", y = "HI")
 
@@ -167,10 +153,10 @@ hi
 ```{r}
 tiller <- beauties_raw %>% 
   filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
-  ggplot(aes(x = reorder(group, tillerperm2), y = tillerperm2)) +
+  ggplot(aes(x = group, y = tillerperm2)) +
   geom_point()+
   facet_wrap(~genotype, scales = "free_x", nrow = 1)+
-   theme_classic() +
+   theme_bw() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
    labs(title="Tillering", x = "QTL combination", y = "Tillers m2")
 
@@ -181,10 +167,10 @@ tiller
 
 earl <- beauties_raw %>% 
   filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
-  ggplot(aes(x = reorder(group, earlgthcm), y = earlgthcm)) +
+  ggplot(aes(x = group, y = earlgthcm)) +
   geom_point()+
   facet_wrap(~genotype, scales = "free_x", nrow = 1)+
-   theme_classic() +
+   theme_bw() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
    labs(title="Ear size", x = "QTL combination", y = "Ear length cm")
 
@@ -195,10 +181,10 @@ earl
 
 rnn <- beauties_raw %>% 
   filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
-  ggplot(aes(x = reorder(group, RNN), y = RNN)) +
+  ggplot(aes(x = group, y = RNN)) +
   geom_point()+
   facet_wrap(~genotype, scales = "free_x", nrow = 1)+
-   theme_classic() +
+   theme_bw() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
    labs(title="Rachis number", x = "QTL combination", y = "RNN")
 
@@ -211,10 +197,10 @@ rnn
 
 klwt <- beauties_raw %>% 
   filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
-  ggplot(aes(x = reorder(group, kwt), y = kwt)) +
+  ggplot(aes(x = group, y = kwt)) +
   geom_point()+
   facet_wrap(~genotype, scales = "free_x", nrow = 1)+
-   theme_classic() +
+   theme_bw() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
    labs(title="Grain Size", x = "QTL combination", y = "200 kwt")
 
@@ -225,14 +211,14 @@ klwt
 
 ```{r regression yld and HI}
 
-corr_HI_yld <- ggplot(beauties2017, aes(x= tillerperm2, y = earlgthcm)) +
+corr_ear_till <- ggplot(beauties2017, aes(x= tillerperm2, y = earlgthcm)) +
   geom_point(aes(colour = as.factor(genotype))) +
   geom_smooth(method = "lm")+ # linear model, grey line is sd
   theme_classic() +
-  labs() # add these in
+  labs(title="Ear length as response to tillers per m2") # add these in
 
 
-corr_HI_yld
+corr_ear_till
 
 ```
 
