@@ -1,5 +1,5 @@
 ---
-title: Effect of different height genes on wheat yield traits
+title: Effect of different dwarfing genes on wheat yield traits
 subtitle: 
 short_title:  # Delete if not required
 
@@ -23,6 +23,8 @@ library(tidyverse)
 library(gapminder)
 library(kableExtra)
 library(lubridate)
+library(cowplot)
+#test
 ```
 
 
@@ -36,8 +38,7 @@ Rather than yourself, this is the space to introduce your **project**. What are
 your goals, what is your data, how do you plan to work with it? Perhaps show some example data if 
 it would help.
 
-In order to build this demo poster correctly, you will also need to have installed the `tidyverse`, 
-`gapminder`, and `kableExtra` packages.
+
 
 ## Preliminary results
 
@@ -45,25 +46,21 @@ This section will demonstrate the different visuals you might want use to show o
 project. Don't feel the need to go overboard, this is supposed to give a taste of the work you are
 doing rather than being a publication ready document.
 
-To get tables formatting correctly, use `knitr::kable` to convert the table to html format. If
-you also want to have alternate row highlighting, pass the result to `kable_styling('striped')` 
-from the `kableExtra` package.
 
-
-```{r}
+```{r read data}
 
 beauties2017 <- read_csv('data/beauties2017.csv') #loading your data file
-head(beauties2017)
+# head(beauties2017)
 
 # determine mean of reps
 
 beauties_summary <- beauties2017 %>% 
-  select(entry, 10:18) %>% 
+  select(entry, 10:19) %>% 
   group_by(entry) %>% 
   summarise_all(mean, na.rm = TRUE) # remove NA to estimate mean of reps 
 
 beauties_raw <- beauties2017 %>% 
-  select(-c(10:18), -REP, -row, -range) %>% 
+  select(-c(10:19), -REP, -row, -range) %>% 
   left_join(beauties_summary, by="entry") %>% 
   distinct()
 
@@ -71,13 +68,13 @@ beauties_raw <- beauties2017 %>%
 
 **Tables**
 
-```{r mytable, out.width='100%', echo = T}
+```{r mytable, out.width='100%', echo = F}
 knitr::kable(head(beauties_summary, n = 5), format = "html", caption = "Example of data measured for each trait") %>% 
   kable_styling("striped")
 
 ```
 
-```{r plot1, fig.cap="First"}
+```{r}
 
 #gather and spread
 #tidy is a rectangular data - 2 dimensions i.e. rows and columns
@@ -91,14 +88,37 @@ knitr::kable(head(beauties_summary, n = 5), format = "html", caption = "Example 
 #functions - anything that follows () is a function ##generalisation - CAREFUL
 
 beauties_raw <- beauties_raw %>% 
-  select(genotype, rhtmajor, rhtminor, 9:17) %>% #select variable columns with data
+  select(genotype, rhtmajor, rhtminor, 9:18) %>% #select variable columns with data
   group_by(genotype, rhtmajor, rhtminor) %>% # group rht gene combo
   summarise_all(mean) # calculate mean for each variety's gene combo
   
 beauties_raw <- beauties_raw %>% 
-  mutate(group = paste(genotype, rhtmajor, rhtminor, sep = "_")) #groups gene combo label
+  mutate(group = paste(rhtmajor, rhtminor, sep = "_")) #groups gene combo label
 
-flowerplot <- beauties_raw %>% 
+
+
+```
+
+```{r yield by QTL}
+
+yield <- beauties_raw %>% 
+  filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
+  ggplot() +
+  geom_boxplot(aes(x = reorder(group, desc(yieldkgm2)), y = yieldkgm2))+
+  #facet_wrap(~genotype, scales = "free_x", nrow = 1)+
+   theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
+   labs(title="Plot yield response to height QTL combination", x = "QTL combination", y = "Grain Yield (kg)")
+
+yield
+
+
+```
+
+
+```{r plot1, fig.cap="Flowering time"}
+
+headplot <- beauties_raw %>% 
   filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
   pivot_longer(cols = c(Z20170920, Z20170926), names_to = "Z_date", values_to = "Z_score") %>% # make long 
   mutate(Z_date=str_sub(string = Z_date, 2, -1)) %>% # -1 is last character
@@ -108,32 +128,56 @@ flowerplot <- beauties_raw %>%
   facet_wrap(~genotype, scales = "free_x", nrow = 1)+
    theme_bw() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
-   labs(title="Flowering time 2nd", x = "QTL combination", y = "Zadoks Score")
+   labs(title="Heading score on two dates for varieties and their QTLs", x = "QTL combination", y = "Zadoks Score", colour = "Date") +
+  theme(legend.position = "bottom")
+# +
+#   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 5),
+#         plot.title = (element_text(size=10, hjust = 0.5)),
+#         panel.grid.minor.x  = element_blank(),
+#         axis.text.y = element_text(size = 5),
+#          axis.title = element_text(size = 8))
+
   
 
-flowerplot
+headplot
 
 ```
 
 
 
+```{r yield by genotype}
 
-```{r}
-
-yield <- beauties_raw %>% 
+yield_gen <- beauties_raw %>% 
   filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
-  ggplot(aes(x = group, y = yieldkgm2)) +
-  geom_point()+
+  ggplot() +
+  geom_point(aes(x = group, y = yieldkgm2))+
   facet_wrap(~genotype, scales = "free_x", nrow = 1)+
    theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
-   labs(title="Plot yield", x = "QTL combination", y = "Grain Yield")
+  theme(axis.text.x = element_blank()) +
+   labs(title="Plot yield", x="", y = "Grain Yield")
 
-yield
+yield_gen
+
 
 ```
 
-```{r}
+```{r biomass by QTL}
+
+biomass <- beauties_raw %>% 
+  filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
+  ggplot() +
+  geom_boxplot(aes(x = reorder(group, desc(bm)), y = bm))+
+  #facet_wrap(~genotype, scales = "free_x", nrow = 1)+
+   theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
+   labs(title="Biomass Z89 response to height QTL combination", x = "QTL combination", y = "Biomass (g)")
+
+# biomass
+
+```
+
+
+```{r HI}
 
 hi <- beauties_raw %>% 
   filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
@@ -144,7 +188,7 @@ hi <- beauties_raw %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
    labs(title="Harvest Index", x = "QTL combination", y = "HI")
 
-hi
+# hi
 
 
 ```
@@ -160,7 +204,7 @@ tiller <- beauties_raw %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
    labs(title="Tillering", x = "QTL combination", y = "Tillers m2")
 
-tiller
+# tiller
 ```
 
 ```{r}
@@ -174,7 +218,7 @@ earl <- beauties_raw %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
    labs(title="Ear size", x = "QTL combination", y = "Ear length cm")
 
-earl
+# earl
 ```
 
 ```{r}
@@ -188,7 +232,7 @@ rnn <- beauties_raw %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
    labs(title="Rachis number", x = "QTL combination", y = "RNN")
 
-rnn
+# rnn
 
 
 ```
@@ -204,28 +248,101 @@ klwt <- beauties_raw %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
    labs(title="Grain Size", x = "QTL combination", y = "200 kwt")
 
-klwt
+# klwt
 
 
 ```
 
-```{r regression yld and HI}
+```{r to do cowplot}
+
+plot_grid(yield_gen, hi, tiller, earl, rnn, klwt)
+          
+
+```
+
+
+
+```{r regression ear length and tillers}
 
 corr_ear_till <- ggplot(beauties2017, aes(x= tillerperm2, y = earlgthcm)) +
-  geom_point(aes(colour = as.factor(genotype))) +
+  geom_point(aes(colour = as.factor(genotype), size=kwt)) +
   geom_smooth(method = "lm")+ # linear model, grey line is sd
   theme_classic() +
-  labs(title="Ear length as response to tillers per m2") # add these in
+  labs(title="Ear length as response to tillers per m2", x= "Tillers per m2", y = "Ear length cm", colour = "Variety")  # add these in
+  
 
 
-corr_ear_till
+# corr_ear_till
 
 ```
+
+
+```{r reg seed wt and yield by genotype}
+
+reg_sdwt_yld <- ggplot(beauties2017, aes(x= kwt, y =  yieldkgm2)) +
+  geom_point(aes(colour = as.factor(genotype), size = RNN)) +
+  geom_smooth(method = "lm")+ # linear model, grey line is sd
+  theme_classic() +
+  labs(title="Kernel wt and yield", x = "Kernel weight g", y = "Yield (kgm2)", colour = "Variety")
+
+
+# reg_sdwt_yld
+
+```
+
+```{r reg biomass and yield by genotype}
+
+reg_bm_yld <- ggplot(beauties_raw, aes(x= bm, y =  yieldkgm2)) +
+  geom_point(aes(colour = as.factor(group), size = htcm)) +
+  geom_smooth(method = "lm")+ # linear model, grey line is sd
+  theme_classic() +
+  labs(title="Biomass and yield", x = "Biomass at Z89 (g)", y = "Yield (kgm2)", colour = "QTL") +
+  theme(legend.text = element_text(size=5),
+        legend.title = element_text(size = 7),
+        legend.key.size = unit(0.2,"cm"),
+        legend.box = "horizontal",
+        legend.position = c(.65,0.8),
+        legend.direction = "horizontal")
+
+
+reg_bm_yld
+
+```
+
+
+
+```{r reg seed wt and yield by QTL}
+
+corr_sdwt_yld <- ggplot(beauties_raw, aes(x= kwt, y =  yieldkgm2)) +
+  geom_point(aes(colour = as.factor(group), size = RNN)) +
+  geom_smooth(method = "lm")+ # linear model, grey line is sd
+  theme_classic() +
+  labs(title="Kernel wt and yield", x = "Kernel weight g", y = "Yield (kgm2)", colour = "QTL") 
+
+
+# corr_sdwt_yld
+
+```
+
+```{r cowplot of regressions, fig.align='center', fig.height= 3, fig.width=8}
+
+plot_grid(reg_sdwt_yld, corr_sdwt_yld)
+
+```
+
+```{r, out.width='100%', fig.align='center', fig.height= 3, fig.width=8}
+
+plot_grid(corr_ear_till, reg_bm_yld)
+
+```
+
 
 
 **Images from a file**
 
-![](resources/img/tidyverse.png){width=100px}
+![](resources/img/tidyverse.png){width=100px} ![](resources/img/lubridate.jpg){width=100px}
+![](resources/img/cowplot.png){width=100px} ![](resources/img/Rmarkdown.png){width=100px}
+
 
 **Plots from R**
 ```{r standard-plot, out.width='60%', fig.align='center', fig.height= 4, fig.width=6, fig.cap="Yet another gapminder plot"}
@@ -270,8 +387,7 @@ encountered, and how did you solve them?
 
 # Next steps
 
-What further steps do you wish your project could take? Or are there any new digital skills that you
-are keen to develop as a result of your involvement in the Data School?
+I would add the data taken in subsequent years to identify interactions, and plot a PCA analysis.
 
 # My Data School Experience
 
