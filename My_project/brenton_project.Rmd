@@ -29,10 +29,13 @@ library(cowplot)
 
 
 # Introduction
-Introduce *yourself*. What's your background? Could you code before Data School? What did your 
-daily work pattern look like before Data School? Etc. This section will be placed in 
-an introductory block at the top of the page separate from the rest of the content. Don't change the section title from "Introduction" otherwise this process won't work correctly.
 
+  I have been an RPO at CSIRO for the last 10 years. I have been involved in several projects with the objective of achieving higher yields in wheat through phenotypic or physilogical traits. My current project is examining the impact of transferring chromosomes from rye into wheat to determine which characteristics can contribute to increased yield. My daily routine usually involves nuturing my plants in the glasshouse, or monitoring how they survive in the paddock. Hail and covid have therefore been destructive to project goals!
+  
+  My background is 'classical' plant breeding and I have worked as a breeder on a number of crops in the last 30 years ranging from wheat to cotton. This has been at government organisations and an international breeding company. The cotton company bred coventional and transgenic varieties.   
+  
+  Before I attended Data School FOCUS I was an R coding virgin.
+  
 # My Project
 Rather than yourself, this is the space to introduce your **project**. What are 
 your goals, what is your data, how do you plan to work with it? Perhaps show some example data if 
