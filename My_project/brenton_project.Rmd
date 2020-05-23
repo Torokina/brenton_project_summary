@@ -33,7 +33,7 @@ library(cowplot)
   
   My background is 'classical' plant breeding and I have worked as a breeder on a number of crops in the last 30 years ranging from wheat to cotton. This has been at government organisations and an international breeding company. The cotton company bred coventional and transgenic varieties. The San Remo pasta you eat is likely one of my durum varieties or their derivatives.   
   
-  Before I attended Data School FOCUS I was an R coding virgin. My data collection revolved around manhandling Excel. 
+  Before I attended Data School FOCUS I was an R raw recruit. My data collection revolved around manhandling Excel. 
   
 # My Project
 
@@ -255,7 +255,7 @@ klwt <- beauties_raw %>%
 
 ```
 
-In assessing yield for the gene combinations in different varieties, it is of interest to examine the yield components to determine which, if any, have a major influence on yield, or whether it may be a cumulative response. 
+In assessing yield for the gene combinations in different varieties, it is of interest to examine the yield components to determine which, if any, have a major influence on yield, or whether it may be a cumulative response. If traits can be used to predict yield, they can be used as a selection tool in early generations when yield plots are not viable.
 
 
 ```{r to do cowplot}
@@ -347,16 +347,16 @@ corr_sdwt_yld <- ggplot(beauties_raw, aes(x= kwt, y =  yieldkgm2)) +
 
 ```
 
-Furthermore, where there are relationships between a trait and yield or between traits outliers may identify potential sources of genetic gain.
+Furthermore, where there are relationships between a trait and yield or between traits outliers may identify potential sources of genetic gain. Outliers can become subject to physiological investigations to identify what is contributing to their response.
 
 
-```{r cowplot of regressions, out.width='100%', fig.align='center', fig.height= 3, fig.width=8}
+```{r cowplot of regressions, out.width='100%', fig.align='center', fig.height= 4, fig.width=8}
 
 plot_grid(reg_sdwt_yld, corr_sdwt_yld)
 
 ```
 
-```{r, out.width='100%', fig.align='center', fig.height= 3, fig.width=8}
+```{r, out.width='100%', fig.align='center', fig.height= 4, fig.width=8}
 
 plot_grid(corr_ear_till, reg_bm_yld)
 
