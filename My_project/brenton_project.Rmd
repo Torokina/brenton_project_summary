@@ -20,7 +20,6 @@ knitr::opts_chunk$set(
 
 #Load libraries
 library(tidyverse)
-library(gapminder)
 library(kableExtra)
 library(lubridate)
 library(cowplot)
@@ -30,7 +29,7 @@ library(cowplot)
 
 # Introduction
 
-  I have been an RPO at CSIRO for the last 10 years. I have been involved in several projects with the objective of achieving higher yields in wheat through transferring desirable phenotypic or physilogical traits. My current project is examining the impact of transferring chromosomes from rye into wheat to determine which characteristics can contribute to increased yield. My daily routine usually involves nurturing my plants in the glasshouse, or monitoring how they survive in the paddock. Hail and covid have therefore been destructive to project goals in 2020!
+  I have been an RPO at CSIRO for the last 10 years. I was involved in several projects with the objective of achieving higher yields in wheat through transferring desirable phenotypic or physiological traits. My current project is examining the impact of transferring chromosomes from rye into wheat to determine which characteristics can contribute to increased yield. My daily routine usually involves nurturing my plants in the glasshouse, or monitoring how they survive in the paddock. Hail and covid have therefore been destructive to project goals in 2020!
   
   My background is 'classical' plant breeding and I have worked as a breeder on a number of crops in the last 30 years ranging from wheat to cotton. This has been at government organisations and an international breeding company. The cotton company bred coventional and transgenic varieties. The San Remo pasta you eat is likely one of my durum varieties or their derivatives.   
   
@@ -70,7 +69,7 @@ knitr::kable(head(beauties_summary, n = 5), format = "html", caption = "Example 
 
 ## Preliminary results
 
-The overall objective of the project was to see if different dwarfing genes (QTLs) had an impact on grain yield, and if so, what combination of genes was most desirable? Yield is the driving force of which varieties are adopted by farmers. 
+The overall objective of the project was to see if different dwarfing genes (QTLs) had an impact on grain yield, and if so, what combination of genes was most desirable? Yield is the driving force for which varieties are adopted by farmers. 
 
 ```{r group gene combos for main varieties and traits}
 
@@ -112,8 +111,28 @@ yield
 
 ```
 
+```{r biomass by QTL not shewn}
 
-```{r plot1, fig.cap="Flowering time"}
+biomass <- beauties_raw %>% 
+  filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
+  ggplot() +
+  geom_boxplot(aes(x = reorder(group, desc(bm)), y = bm))+
+  #facet_wrap(~genotype, scales = "free_x", nrow = 1)+
+   theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
+   labs(title="Biomass Z89 response to height QTL combination", x = "QTL combination", y = "Biomass (g)")
+
+# biomass
+
+
+```
+
+
+
+As plant development stage, particularly time of heading or flowering, influences yield I wanted a visual to see if different QTL combinations had an effect on growth rate for  varieties.
+
+```{r plot, fig.height= 4, fig.width=8 }
+# fig.cap="Heading time"
 
 headplot <- beauties_raw %>% 
   filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
@@ -142,7 +161,7 @@ headplot
 
 
 
-```{r yield by genotype}
+```{r yield for genotype by QTL}
 
 yield_gen <- beauties_raw %>% 
   filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
@@ -153,28 +172,14 @@ yield_gen <- beauties_raw %>%
   theme(axis.text.x = element_blank()) +
    labs(title="Plot yield", x="", y = "Grain Yield")
 
-yield_gen
+# yield_gen
 
 
 ```
 
-```{r biomass by QTL}
-
-biomass <- beauties_raw %>% 
-  filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
-  ggplot() +
-  geom_boxplot(aes(x = reorder(group, desc(bm)), y = bm))+
-  #facet_wrap(~genotype, scales = "free_x", nrow = 1)+
-   theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
-   labs(title="Biomass Z89 response to height QTL combination", x = "QTL combination", y = "Biomass (g)")
-
-# biomass
-
-```
 
 
-```{r HI}
+```{r HI by QTL}
 
 hi <- beauties_raw %>% 
   filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
@@ -182,8 +187,8 @@ hi <- beauties_raw %>%
   geom_point()+
   facet_wrap(~genotype, scales = "free_x", nrow = 1)+
    theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
-   labs(title="Harvest Index", x = "QTL combination", y = "HI")
+  theme(axis.text.x = element_blank()) +
+   labs(title="Harvest Index", x = "", y = "HI")
 
 # hi
 
@@ -198,8 +203,8 @@ tiller <- beauties_raw %>%
   geom_point()+
   facet_wrap(~genotype, scales = "free_x", nrow = 1)+
    theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
-   labs(title="Tillering", x = "QTL combination", y = "Tillers m2")
+  theme(axis.text.x = element_blank()) +
+   labs(title="Tillering", x = "", y = "Tillers m2")
 
 # tiller
 ```
@@ -234,7 +239,7 @@ rnn <- beauties_raw %>%
 
 ```
 
-```{r plot8, fig.cap="Last"}
+```{r plot8}
 
 klwt <- beauties_raw %>% 
   filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
@@ -243,16 +248,19 @@ klwt <- beauties_raw %>%
   facet_wrap(~genotype, scales = "free_x", nrow = 1)+
    theme_bw() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
-   labs(title="Grain Size", x = "QTL combination", y = "200 kwt")
+   labs(title="Grain Weight", x = "QTL combination", y = "200 kwt")
 
 # klwt
 
 
 ```
 
+In assessing yield for the gene combinations in different varieties, it is of interest to examine the yield components to determine which, if any, have a major influence on yield, or whether it may be a cumulative response. 
+
+
 ```{r to do cowplot}
 
-plot_grid(yield_gen, hi, tiller, earl, rnn, klwt)
+plot_grid(yield_gen, hi, tiller, earl, rnn, klwt, rel_heights = c(.9,1))
           
 
 ```
@@ -265,9 +273,14 @@ corr_ear_till <- ggplot(beauties2017, aes(x= tillerperm2, y = earlgthcm)) +
   geom_point(aes(colour = as.factor(genotype), size=kwt)) +
   geom_smooth(method = "lm")+ # linear model, grey line is sd
   theme_classic() +
-  labs(title="Ear length as response to tillers per m2", x= "Tillers per m2", y = "Ear length cm", colour = "Variety")  # add these in
-  
-
+  labs(title="Ear length as response to tillers per m2", x= "Tillers per m2", y = "Ear length cm", colour = "Variety") + # add these in
+   theme(legend.text = element_text(size=5),
+        legend.title = element_text(size = 7),
+        legend.key.size = unit(0.2,"cm"),
+        legend.box = "horizontal", # align boxes horizontally
+        legend.position = "bottom",
+       # legend.position = c(.65,0.8), # grid position within graph
+        legend.direction = "horizontal") # key in horizontal direction
 
 # corr_ear_till
 
@@ -280,7 +293,14 @@ reg_sdwt_yld <- ggplot(beauties2017, aes(x= kwt, y =  yieldkgm2)) +
   geom_point(aes(colour = as.factor(genotype), size = RNN)) +
   geom_smooth(method = "lm")+ # linear model, grey line is sd
   theme_classic() +
-  labs(title="Kernel wt and yield", x = "Kernel weight g", y = "Yield (kgm2)", colour = "Variety")
+  labs(title="Kernel wt and yield", x = "Kernel weight g", y = "Yield (kgm2)", colour = "Variety") +
+   theme(legend.text = element_text(size=5),
+        legend.title = element_text(size = 7),
+        legend.key.size = unit(0.2,"cm"),
+        legend.box = "horizontal", # align boxes horizontally
+        legend.position = "bottom",
+        legend.direction = "horizontal") # key in horizontal direction
+
 
 
 # reg_sdwt_yld
@@ -297,12 +317,12 @@ reg_bm_yld <- ggplot(beauties_raw, aes(x= bm, y =  yieldkgm2)) +
   theme(legend.text = element_text(size=5),
         legend.title = element_text(size = 7),
         legend.key.size = unit(0.2,"cm"),
-        legend.box = "horizontal",
-        legend.position = c(.65,0.8),
-        legend.direction = "horizontal")
+        legend.box = "horizontal", # align boxes horizontally
+        legend.position = "bottom",
+        legend.direction = "horizontal") # key in horizontal direction
 
 
-reg_bm_yld
+# reg_bm_yld
 
 ```
 
@@ -314,14 +334,23 @@ corr_sdwt_yld <- ggplot(beauties_raw, aes(x= kwt, y =  yieldkgm2)) +
   geom_point(aes(colour = as.factor(group), size = RNN)) +
   geom_smooth(method = "lm")+ # linear model, grey line is sd
   theme_classic() +
-  labs(title="Kernel wt and yield", x = "Kernel weight g", y = "Yield (kgm2)", colour = "QTL") 
+  labs(title="Kernel wt and yield", x = "Kernel weight g", y = "Yield (kgm2)", colour = "QTL") +
+   theme(legend.text = element_text(size=5),
+        legend.title = element_text(size = 7),
+        legend.key.size = unit(0.2,"cm"),
+        legend.box = "horizontal", # align boxes horizontally
+        legend.position = "bottom",
+        legend.direction = "horizontal") # key in horizontal direction
 
 
 # corr_sdwt_yld
 
 ```
 
-```{r cowplot of regressions, fig.align='center', fig.height= 3, fig.width=8}
+Furthermore, where there are relationships between a trait and yield or between traits outliers may identify potential sources of genetic gain.
+
+
+```{r cowplot of regressions, out.width='100%', fig.align='center', fig.height= 3, fig.width=8}
 
 plot_grid(reg_sdwt_yld, corr_sdwt_yld)
 
@@ -335,52 +364,20 @@ plot_grid(corr_ear_till, reg_bm_yld)
 
 
 
-**Images from a file**
-
-![](resources/img/tidyverse.png){width=100px} ![](resources/img/lubridate.jpg){width=100px}
-![](resources/img/cowplot.png){width=100px} ![](resources/img/Rmarkdown.png){width=100px}
-
-
-**Plots from R**
-```{r standard-plot, out.width='60%', fig.align='center', fig.height= 4, fig.width=6, fig.cap="Yet another gapminder plot"}
-gapminder %>% 
-  filter(year == 1987) %>% 
-  ggplot(aes(x = gdpPercap, y = lifeExp, colour = continent, size = pop)) +
-  geom_point() +
-  scale_x_log10(labels = function(b) format(b, scientific = F)) +
-  scale_size(trans = "sqrt", guide = "none") +
-  scale_color_brewer(palette = "Set1") +
-  theme_linedraw() +
-  theme(legend.position = "bottom")
-```
-
-Your figure and table captions are automatically numbered and can be referenced in the text
-if needed: see eg. Table \@ref(tab:mytable) and Figure \@ref(fig:standard-plot)
-
 # My Digital Toolbox
 
-What digital tools have you been using in your project? Do you expect that everything will be able 
-to be completed within R, or will you need to work with multiple tools to get the right result?
-Which of the digital skills needed for your project have you learned since starting Data School?
+![](resources/img/tidyverse.png){width=100px} ![](resources/img/lubridate.jpg){width=100px}
+ ![](resources/img/Rmarkdown.png){width=100px}  ![](resources/img/ggplot.png){width=100px}
 
-You can use all the usual R markdown features in writing a project summary, including lists:
+## Favourite tool
 
-* R - dplyr, ggplot, ...
-* Python
-* SQL
+![](resources/img/cowplot.png){width=100px}
 
-## Favourite tool (optional)
-
-Is there a tool/package/function in particular that you've enjoyed using? Give it a special shout out here. What about this tool makes it your favourite?
-
-![](https://raw.githubusercontent.com/tidyverse/ggplot2/master/man/figures/logo.png){.pull-right width=100px}
-
-No prizes for guessing mine:
+The cowplot Longhorn icon is iconic in agriculture, and the tool allowed me to incorporate a large number of graphs relating to different traits into a confined area. This meant I did not have to omit the graphs where I had taken the results into consideration.
 
 # My time went ...
 
-What parts of your project take the most time and effort? Were there any surprising challenges you
-encountered, and how did you solve them?
+My initial time was spent trying to write code in the right structure using functions. But then I found I spent a larger proportion of my time playing with the aesthetics of plots.
 
 # Next steps
 
@@ -388,8 +385,10 @@ I would add the data taken in subsequent years to identify interactions, and plo
 
 # My Data School Experience
 
-This summary is mostly about your project. However we would also like to hear about other
-parts of your Data School experience. What aspects of the program did you really enjoy? Have you
-tried applying the skills you have learned in your daily work? Have you been able to transfer this 
-knowledge to your team members? Any descriptions of the personal impact the program has 
-had are welcome here as well!
+The program has been a great opportunity to expand my networking throughout the organisation. 
+
+The experience has given me a foundation to coding and has encouraged me to continue using into the future. It has given me a second language for which I can converse at work.
+
+It has also encouraged me to produce tidy data!
+
+
