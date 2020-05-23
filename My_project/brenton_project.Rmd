@@ -30,28 +30,15 @@ library(cowplot)
 
 # Introduction
 
-  I have been an RPO at CSIRO for the last 10 years. I have been involved in several projects with the objective of achieving higher yields in wheat through transferring desirable phenotypic or physilogical traits. My current project is examining the impact of transferring chromosomes from rye into wheat to determine which characteristics can contribute to increased yield. My daily routine usually involves nuturing my plants in the glasshouse, or monitoring how they survive in the paddock. Hail and covid have therefore been destructive to project goals!
+  I have been an RPO at CSIRO for the last 10 years. I have been involved in several projects with the objective of achieving higher yields in wheat through transferring desirable phenotypic or physilogical traits. My current project is examining the impact of transferring chromosomes from rye into wheat to determine which characteristics can contribute to increased yield. My daily routine usually involves nurturing my plants in the glasshouse, or monitoring how they survive in the paddock. Hail and covid have therefore been destructive to project goals in 2020!
   
-  My background is 'classical' plant breeding and I have worked as a breeder on a number of crops in the last 30 years ranging from wheat to cotton. This has been at government organisations and an international breeding company. The cotton company bred coventional and transgenic varieties.   
+  My background is 'classical' plant breeding and I have worked as a breeder on a number of crops in the last 30 years ranging from wheat to cotton. This has been at government organisations and an international breeding company. The cotton company bred coventional and transgenic varieties. The San Remo pasta you eat is likely one of my durum varieties or their derivatives.   
   
-  Before I attended Data School FOCUS I was an R coding virgin.
+  Before I attended Data School FOCUS I was an R coding virgin. My data collection revolved around manhandling Excel. 
   
 # My Project
 
-My project was to examine if incorporating alternative novel plant height reduction genes into commercial varieties of wheat improved yield? Varieties had their present dwarfing gene, either Rht 1 or Rht 2, replaced with either Rht 18 or Rht 13. Furthermore, lines with an additioanl genetic marker for the gene, Rht 8, were developed. A range of traits which contribute to grain yield were measured in the field. I proposed to determine if there was a yield response to the height gene/s incorporated? From the traits measured it was anticipated to identify those which contributed to yield. The following table demonstrates a sample of the data collected.    
-
-Rather than yourself, this is the space to introduce your **project**. What are 
-your goals, what is your data, how do you plan to work with it? Perhaps show some example data if 
-it would help.
-
-
-
-## Preliminary results
-
-This section will demonstrate the different visuals you might want use to show off your 
-project. Don't feel the need to go overboard, this is supposed to give a taste of the work you are
-doing rather than being a publication ready document.
-
+My project was to examine if incorporating alternative novel plant height reduction genes into commercial varieties of wheat improved yield? Varieties had their present dwarfing gene, either Rht 1 or Rht 2, replaced with either Rht 3_c26, Rht 18 or Rht 13. Furthermore, lines with an additioanl genetic marker for the gene, Rht 8, were developed. A range of traits which contribute to grain yield were measured in the field. I proposed to determine if there was a yield response to the height gene/s incorporated? From the traits measured it was anticipated to identify those which contributed to yield. The following table demonstrates a sample of the data collected.    
 
 ```{r read data}
 
@@ -72,7 +59,7 @@ beauties_raw <- beauties2017 %>%
 
 ```
 
-**Tables**
+**Table**
 
 ```{r mytable, out.width='100%', echo = F}
 knitr::kable(head(beauties_summary, n = 5), format = "html", caption = "Example of data measured for each trait") %>% 
@@ -80,7 +67,12 @@ knitr::kable(head(beauties_summary, n = 5), format = "html", caption = "Example 
 
 ```
 
-```{r}
+
+## Preliminary results
+
+The overall objective of the project was to see if different dwarfing genes (QTLs) had an impact on grain yield, and if so, what combination of genes was most desirable? Yield is the driving force of which varieties are adopted by farmers. 
+
+```{r group gene combos for main varieties and traits}
 
 #gather and spread
 #tidy is a rectangular data - 2 dimensions i.e. rows and columns
@@ -101,16 +93,15 @@ beauties_raw <- beauties_raw %>%
 beauties_raw <- beauties_raw %>% 
   mutate(group = paste(rhtmajor, rhtminor, sep = "_")) #groups gene combo label
 
-
-
 ```
+
 
 ```{r yield by QTL}
 
 yield <- beauties_raw %>% 
   filter(!genotype %in% c("C6", "Sceptre", "Shield")) %>% # drop these var
   ggplot() +
-  geom_boxplot(aes(x = reorder(group, desc(yieldkgm2)), y = yieldkgm2))+
+  geom_boxplot(aes(x = reorder(group, desc(yieldkgm2)), y = yieldkgm2))+ # reorder in descending yield
   #facet_wrap(~genotype, scales = "free_x", nrow = 1)+
    theme_bw() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 8)) +
