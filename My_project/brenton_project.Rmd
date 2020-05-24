@@ -274,9 +274,9 @@ corr_ear_till <- ggplot(beauties2017, aes(x= tillerperm2, y = earlgthcm)) +
   geom_smooth(method = "lm")+ # linear model, grey line is sd
   theme_classic() +
   labs(title="Ear length as response to tillers per m2", x= "Tillers per m2", y = "Ear length cm", colour = "Variety") + # add these in
-   theme(legend.text = element_text(size=5),
-        legend.title = element_text(size = 7),
-        legend.key.size = unit(0.2,"cm"),
+   theme(legend.text = element_text(size=5), # reduce size of text in legend box
+        legend.title = element_text(size = 7), # reduce size of legend title
+        legend.key.size = unit(0.2,"cm"), # reduce size of legend box
         legend.box = "horizontal", # align boxes horizontally
         legend.position = "bottom",
        # legend.position = c(.65,0.8), # grid position within graph
